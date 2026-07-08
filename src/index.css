@@ -8,6 +8,7 @@
   color-scheme: light dark;
   --bg: #f6f7f9;
   --surface: #ffffff;
+  --editor-bg: #fdfdf6;
   --border: #e2e5ea;
   --text: #1c1e21;
   --muted: #65676b;
@@ -19,6 +20,7 @@
   :root {
     --bg: #101114;
     --surface: #1c1e22;
+    --editor-bg: #1e1d17;
     --border: #2e3238;
     --text: #e7e9ec;
     --muted: #9aa0a6;

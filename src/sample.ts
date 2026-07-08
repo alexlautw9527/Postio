@@ -1,6 +1,8 @@
 export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 
-**Postio** 把 Markdown 轉成適合貼上 Threads 的純文字。*Write once. Publish anywhere.*
+**Postio** 把 Markdown 轉成適合貼上 Threads 的純文字。
+
+*Write once. Publish anywhere.*
 
 ## 快速上手
 
@@ -10,7 +12,8 @@ export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 
 ## 支援的格式
 
-- **粗體**、*斜體* 與 [連結](https://example.com)
+- **Bold 粗體** 與 *Italic 斜體*（英文與數字才看得出變化）
+- [連結](https://example.com) 會變成「文字 (網址)」
 - 巢狀清單
   - 像這一層
 - 待辦清單

@@ -35,20 +35,28 @@ export default function App() {
         <ThemePicker value={themeId} onChange={updateTheme} />
       </header>
       <main className="main">
-        <Editor value={markdown} onChange={updateMarkdown} />
-        <section className="preview">
-          {posts.length === 0 ? (
-            <div className="empty">
-              <p>貼上 Markdown，這裡立刻出現 Threads 版本。</p>
-              <button className="sample" onClick={() => updateMarkdown(SAMPLE_MARKDOWN)}>
-                載入範例
-              </button>
-            </div>
-          ) : (
-            posts.map((post, i) => (
-              <PostCard key={i} post={post} index={i} total={posts.length} />
-            ))
-          )}
+        <section className="pane">
+          <label className="pane-label" htmlFor="markdown-input">
+            Markdown 原稿
+          </label>
+          <Editor value={markdown} onChange={updateMarkdown} />
+        </section>
+        <section className="pane">
+          <h2 className="pane-label">Threads 預覽</h2>
+          <div className="preview">
+            {posts.length === 0 ? (
+              <div className="empty">
+                <p>貼上 Markdown，這裡立刻出現 Threads 版本。</p>
+                <button className="sample" onClick={() => updateMarkdown(SAMPLE_MARKDOWN)}>
+                  載入範例
+                </button>
+              </div>
+            ) : (
+              posts.map((post, i) => (
+                <PostCard key={i} post={post} index={i} total={posts.length} />
+              ))
+            )}
+          </div>
         </section>
       </main>
     </div>

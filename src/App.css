@@ -39,13 +39,27 @@
   }
 }
 
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pane-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
 .editor {
   width: 100%;
   min-height: 70vh;
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--editor-bg);
   color: var(--text);
   font: 14px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
   resize: vertical;
@@ -136,6 +150,17 @@
 }
 
 .theme-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.theme-options {
   display: flex;
   gap: 8px;
 }

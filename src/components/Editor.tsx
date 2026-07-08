@@ -6,6 +6,8 @@ interface EditorProps {
 export function Editor({ value, onChange }: EditorProps) {
   return (
     <textarea
+      id="markdown-input"
+      name="markdown"
       className="editor"
       value={value}
       onChange={e => onChange(e.target.value)}
