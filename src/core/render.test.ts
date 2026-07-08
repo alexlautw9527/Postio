@@ -94,3 +94,42 @@ describe('區塊元素', () => {
     expect(kinds).toEqual(['heading', 'paragraph', 'divider'])
   })
 })
+
+describe('清單', () => {
+  it('無序清單', () => {
+    expect(texts('- a\n- b')).toEqual(['• a', '• b'])
+  })
+
+  it('巢狀無序清單縮排與符號分層', () => {
+    expect(texts('- a\n  - b\n    - c\n      - d')).toEqual([
+      '• a',
+      '   ◦ b',
+      '      ▪ c',
+      '         ▪ d',
+    ])
+  })
+
+  it('有序清單保留數字、支援起始值', () => {
+    expect(texts('3. c\n4. d')).toEqual(['3. c', '4. d'])
+  })
+
+  it('巢狀有序清單', () => {
+    expect(texts('1. a\n   1. b')).toEqual(['1. a', '   1. b'])
+  })
+
+  it('checkbox', () => {
+    expect(texts('- [ ] todo\n- [x] done')).toEqual(['⬜ todo', '✅ done'])
+  })
+
+  it('巢狀 checkbox', () => {
+    expect(texts('- a\n  - [x] done')).toEqual(['• a', '   ✅ done'])
+  })
+
+  it('清單項內的行內樣式', () => {
+    expect(texts('- **b**')).toEqual(['• 𝗯'])
+  })
+
+  it('清單項 kind 為 listItem', () => {
+    expect(renderBlocks('- a', theme).map(b => b.kind)).toEqual(['listItem'])
+  })
+})

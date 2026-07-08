@@ -1,7 +1,7 @@
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
-import type { PhrasingContent, Root, RootContent } from 'mdast'
+import type { List, PhrasingContent, Root, RootContent } from 'mdast'
 import { applyStyle } from './unicode'
 import type { Theme } from './themes'
 
@@ -56,8 +56,11 @@ function walk(nodes: RootContent[], theme: Theme, blocks: Block[]): void {
           blocks.push({ kind: 'paragraph', text: node.value })
         }
         break
+      case 'list':
+        renderList(node, 0, theme, blocks)
+        break
       default:
-        break // 其他區塊型別於 Task 6 加入
+        break
     }
   }
 }
@@ -105,4 +108,34 @@ function styleText(text: string, bold: boolean, italic: boolean): string {
   if (bold) return applyStyle(text, 'bold')
   if (italic) return applyStyle(text, 'italic')
   return text
+}
+
+const UL_MARKERS = ['•', '◦', '▪']
+const INDENT = '   ' // 每層 3 個半形空格
+
+function renderList(list: List, depth: number, theme: Theme, blocks: Block[]): void {
+  const indent = INDENT.repeat(depth)
+  let index = list.start ?? 1
+  for (const item of list.children) {
+    let marker: string
+    if (item.checked === true) marker = '✅'
+    else if (item.checked === false) marker = '⬜'
+    else if (list.ordered) marker = `${index}.`
+    else marker = UL_MARKERS[Math.min(depth, UL_MARKERS.length - 1)]
+
+    let first = true
+    for (const child of item.children) {
+      if (child.type === 'paragraph') {
+        const line = renderInline(child.children, false, false)
+        blocks.push({
+          kind: 'listItem',
+          text: first ? `${indent}${marker} ${line}` : `${indent}${INDENT}${line}`,
+        })
+        first = false
+      } else if (child.type === 'list') {
+        renderList(child, depth + 1, theme, blocks)
+      }
+    }
+    index++
+  }
 }
