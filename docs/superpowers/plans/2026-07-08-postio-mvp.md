@@ -17,7 +17,7 @@
 - 介面文案一律繁體中文；程式碼識別字與 commit 訊息用英文
 - **commit 訊息禁止加入任何 AI 署名（不加 `Co-Authored-By: Claude` 等 trailer）**
 - 字數一律以 grapheme 計（`Intl.Segmenter`，granularity `'grapheme'`）
-- Threads 單篇上限 500 字；多篇時每篇上限 = 500 − 10（編號保留）
+- Threads 單篇上限 500 字；多篇時每篇上限 = 500 − 12（編號保留，涵蓋至 999 篇）
 - 測試指令：`npm test`（= `vitest run`）；所有 core 任務走 TDD：先寫測試、看它失敗、再實作
 
 ---
@@ -712,7 +712,7 @@ function countGraphemes(text: string): number
 演算法（規格第 4 節）：
 
 1. 先以 500 全額裝箱，結果單篇 → 直接採用、不編號
-2. 否則以 490（= 500 − 10 編號保留）重新裝箱，每篇篇尾加 `\n\n(n/m)`
+2. 否則以 488（= 500 − 12 編號保留）重新裝箱，每篇篇尾加 `\n\n(n/m)`
 3. 裝箱前先「正規化」：超過容量的單一區塊按句子邊界（`。！？．!?.` 之後）拆成多個同 kind 區塊；單句仍超長則按 grapheme 硬切並標 `overflow`
 4. 區塊相接規則：兩個相鄰 `listItem` 用 `\n`，其他一律 `\n\n`
 5. 標題不落單：關箱時若最後一個區塊是 heading 且後面還有內容，把 heading 移到下一篇（該箱只剩 heading 一個區塊時不移，避免死循環）
@@ -817,7 +817,7 @@ export interface Post {
 }
 
 const LIMIT = 500
-const NUMBER_RESERVE = 10 // "\n\n(10/12)" 最長 9 字，保留 10
+const NUMBER_RESERVE = 12 // "\n\n(999/999)" 最長 11 字，保留 12（涵蓋至 999 篇）
 
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' })
 
