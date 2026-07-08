@@ -7,7 +7,7 @@ export interface Post {
 }
 
 const LIMIT = 500
-const NUMBER_RESERVE = 10 // "\n\n(10/12)" 最長 9 字，保留 10
+const NUMBER_RESERVE = 12 // "\n\n(999/999)" 最長 11 字，保留 12（涵蓋至 999 篇）
 
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' })
 
