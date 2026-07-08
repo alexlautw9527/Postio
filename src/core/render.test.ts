@@ -30,8 +30,13 @@ describe('行內樣式', () => {
     expect(texts('https://postio.app')).toEqual(['https://postio.app'])
   })
 
-  it('inline code 去掉反引號保留文字', () => {
-    expect(texts('`npm i` 指令')).toEqual(['npm i 指令'])
+  it('inline code 轉為等寬字型（中文原樣）', () => {
+    expect(texts('`npm i 中` 指令')).toEqual(['𝚗𝚙𝚖 𝚒 中 指令'])
+  })
+
+  it('獨立一行 === 是強制分頁標記', () => {
+    const kinds = renderBlocks('甲\n\n===\n\n乙', theme).map(b => b.kind)
+    expect(kinds).toEqual(['paragraph', 'pageBreak', 'paragraph'])
   })
 
   it('圖片輸出 alt 文字', () => {

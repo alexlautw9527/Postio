@@ -143,6 +143,11 @@ function pack(blocks: Block[], capacity: number): Draft[] {
   }
 
   for (const unit of toUnits(blocks)) {
+    if (unit[0].kind === 'pageBreak') {
+      // 使用者明確指定的分頁：立即關箱，且不套用標題不落單規則
+      close(false)
+      continue
+    }
     if (tryPush(unit)) continue
     close(true)
     if (tryPush(unit)) continue

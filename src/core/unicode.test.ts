@@ -10,6 +10,10 @@ describe('applyStyle', () => {
     expect(applyStyle('42', 'bold')).toBe('𝟰𝟮')
   })
 
+  it('mono 轉換字母與數字、中文原樣', () => {
+    expect(applyStyle('a1Z中', 'mono')).toBe('𝚊𝟷𝚉中')
+  })
+
   it('italic 轉換字母、數字保持原樣（無 sans-serif italic 數字碼位）', () => {
     expect(applyStyle('a1', 'italic')).toBe('𝘢1')
   })

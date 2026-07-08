@@ -5,7 +5,7 @@ import type { List, PhrasingContent, Root, RootContent, TableRow } from 'mdast'
 import { applyStyle } from './unicode'
 import type { Theme } from './themes'
 
-export type BlockKind = 'heading' | 'paragraph' | 'listItem' | 'divider' | 'blockquote'
+export type BlockKind = 'heading' | 'paragraph' | 'listItem' | 'divider' | 'blockquote' | 'pageBreak'
 
 export interface Block {
   kind: BlockKind
@@ -26,6 +26,12 @@ function walk(nodes: RootContent[], theme: Theme, blocks: Block[]): void {
   for (const node of nodes) {
     switch (node.type) {
       case 'paragraph': {
+        // 獨立一行 ===（前後空行）是使用者的強制分頁標記
+        const only = node.children[0]
+        if (node.children.length === 1 && only.type === 'text' && /^={3,}$/.test(only.value.trim())) {
+          blocks.push({ kind: 'pageBreak', text: '' })
+          break
+        }
         const text = renderInline(node.children, false, false)
         if (text.trim() !== '') blocks.push({ kind: 'paragraph', text })
         break
@@ -89,7 +95,8 @@ function renderInline(nodes: PhrasingContent[], bold: boolean, italic: boolean):
         out += renderInline(node.children, bold, true)
         break
       case 'inlineCode':
-        out += styleText(node.value, bold, italic)
+        // 行內程式碼一律等寬，不受外層粗斜體影響
+        out += applyStyle(node.value, 'mono')
         break
       case 'link': {
         const label = renderInline(node.children, bold, italic)

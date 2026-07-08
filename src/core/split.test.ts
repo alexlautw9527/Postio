@@ -5,6 +5,7 @@ import { countGraphemes, splitBlocks } from './split'
 const para = (text: string): Block => ({ kind: 'paragraph', text })
 const heading = (text: string): Block => ({ kind: 'heading', text })
 const li = (text: string): Block => ({ kind: 'listItem', text })
+const pageBreak = (): Block => ({ kind: 'pageBreak', text: '' })
 const a = (n: number) => 'a'.repeat(n)
 
 describe('countGraphemes', () => {
@@ -87,6 +88,24 @@ describe('splitBlocks', () => {
     expect(posts).toHaveLength(2)
     expect(posts[0].text.includes('•')).toBe(false)
     expect((posts[1].text.match(/•/g) ?? []).length).toBe(3)
+  })
+
+  it('強制分頁：即使總長很短也切成兩篇並編號', () => {
+    const posts = splitBlocks([para('甲'), pageBreak(), para('乙')])
+    expect(posts).toHaveLength(2)
+    expect(posts[0].text).toBe('甲\n\n(1/2)')
+    expect(posts[1].text).toBe('乙\n\n(2/2)')
+  })
+
+  it('強制分頁不套用標題不落單規則（尊重使用者的明確分割）', () => {
+    const posts = splitBlocks([para('p'), heading('▍ 𝗧'), pageBreak(), para('q')])
+    expect(posts).toHaveLength(2)
+    expect(posts[0].text.includes('𝗧')).toBe(true)
+  })
+
+  it('連續或首尾的分頁標記不產生空貼文', () => {
+    const posts = splitBlocks([pageBreak(), para('甲'), pageBreak(), pageBreak(), para('乙'), pageBreak()])
+    expect(posts).toHaveLength(2)
   })
 
   it('清單整組超過單篇容量時才允許在項目邊界切開', () => {
