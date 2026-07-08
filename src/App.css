@@ -1,0 +1,157 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.editor {
+  width: 100%;
+  min-height: 70vh;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font: 14px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
+  resize: vertical;
+}
+
+.editor:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.sample {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.post-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.count.over {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.post-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.warning {
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.copy {
+  align-self: flex-end;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.copy:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.theme-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.theme {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.theme.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}

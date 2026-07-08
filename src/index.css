@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --border: #e2e5ea;
+  --text: #1c1e21;
+  --muted: #65676b;
+  --accent: #0a7cff;
+  --danger: #e0245e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101114;
+    --surface: #1c1e22;
+    --border: #2e3238;
+    --text: #e7e9ec;
+    --muted: #9aa0a6;
+  }
+}
+
+body {
+  font-family: -apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
