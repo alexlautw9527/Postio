@@ -16,6 +16,7 @@ export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 - [連結](https://example.com) 會變成「文字 (網址)」
 - 巢狀清單
   - 像這一層
+    - 最多示範到第三層
 - 待辦清單
   - [x] 已完成的事
   - [ ] 還沒做的事
