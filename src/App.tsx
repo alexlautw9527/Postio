@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { convert, THEMES } from './core'
 import { Editor } from './components/Editor'
 import { PostCard } from './components/PostCard'
@@ -31,6 +31,24 @@ export default function App() {
 
   const posts = useMemo(() => convert(markdown, themeId), [markdown, themeId])
 
+  const editorRef = useRef<HTMLTextAreaElement>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  // 捲動跟隨：記住主動捲動的一側，避免兩側互相觸發造成抖動
+  const scrollSource = useRef<'editor' | 'preview' | null>(null)
+
+  const syncScroll = (from: 'editor' | 'preview') => {
+    const src = from === 'editor' ? editorRef.current : previewRef.current
+    const dst = from === 'editor' ? previewRef.current : editorRef.current
+    if (!src || !dst) return
+    if (scrollSource.current && scrollSource.current !== from) return
+    scrollSource.current = from
+    const ratio = src.scrollTop / Math.max(1, src.scrollHeight - src.clientHeight)
+    dst.scrollTop = ratio * (dst.scrollHeight - dst.clientHeight)
+    window.requestAnimationFrame(() => {
+      scrollSource.current = null
+    })
+  }
+
   const updateMarkdown = (value: string) => {
     setMarkdown(value)
     safeSet(DRAFT_KEY, value)
@@ -55,11 +73,16 @@ export default function App() {
           <label className="pane-label" htmlFor="markdown-input">
             Markdown 原稿
           </label>
-          <Editor value={markdown} onChange={updateMarkdown} />
+          <Editor
+            ref={editorRef}
+            value={markdown}
+            onChange={updateMarkdown}
+            onScroll={() => syncScroll('editor')}
+          />
         </section>
         <section className="pane">
           <h2 className="pane-label">Threads 預覽</h2>
-          <div className="preview">
+          <div className="preview" ref={previewRef} onScroll={() => syncScroll('preview')}>
             {posts.length === 0 ? (
               <div className="empty">
                 <p>貼上 Markdown，這裡立刻出現 Threads 版本。</p>

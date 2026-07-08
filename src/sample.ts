@@ -25,7 +25,5 @@ export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 
 ---
 
-以上是分格符號的寫法
-
-祝妳使用愉快
+祝您使用愉快！
 `
