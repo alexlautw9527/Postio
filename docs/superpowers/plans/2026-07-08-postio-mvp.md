@@ -1070,30 +1070,30 @@ git commit -m "feat: convert() public api wiring parse, render, split"
 - [ ] **Step 1: 建立 `src/sample.ts`**
 
 ```ts
-export const SAMPLE_MARKDOWN = `# Postio 是什麼
+export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 
 **Postio** 把 Markdown 轉成適合貼上 Threads 的純文字。*Write once. Publish anywhere.*
 
-## 你可以這樣用
+## 快速上手
 
-1. 在左邊貼上 Markdown
-2. 右邊立刻看到 Threads 版本
-3. 逐篇複製、貼上
+1. 把這裡的內容整段換成你的 Markdown
+2. 右邊立刻出現 Threads 版本，超過 500 字會自動分段成串文
+3. 逐篇按「複製」，依序貼到 Threads 就完成
 
 ## 支援的格式
 
-- 粗體與斜體
+- **粗體**、*斜體* 與 [連結](https://example.com)
 - 巢狀清單
-  - 像這樣
+  - 像這一層
 - 待辦清單
   - [x] 已完成的事
   - [ ] 還沒做的事
 
-> 引用文字會用引號包起來，look at me.
+> 引用會用引號包起來；標題會加上符號前綴，右上角可以切換符號主題。
 
 ---
 
-超過 500 字會自動分段成 thread，每篇結尾加上編號，直接照順序貼成串文就好。連結也會轉換：[Postio](https://example.com)。
+小提醒：中文沒有對應的 Unicode 粗體，視覺層級主要靠符號與空行；英文與數字則會變成 𝗯𝗼𝗹𝗱 樣式。
 `
 
 - [ ] **Step 2: 建立 `src/components/Editor.tsx`**
@@ -1154,7 +1154,7 @@ import { SAMPLE_MARKDOWN } from './sample'
 import './App.css'
 
 export default function App() {
-  const [markdown, setMarkdown] = useState('')
+  const [markdown, setMarkdown] = useState(SAMPLE_MARKDOWN)
 
   const posts = useMemo(() => convert(markdown, 'line'), [markdown])
 
@@ -1391,9 +1391,9 @@ body {
 
 Run: `npm run dev`，瀏覽器開啟顯示的網址。
 Expected:
-1. 空狀態顯示引導文案與「載入範例」按鈕
-2. 點「載入範例」→ 右欄出現轉換後卡片（標題有 ▍ 前綴、粗體為 Unicode、checkbox 為 ⬜/✅）
-3. 左欄輸入時右欄即時更新；清空輸入回到空狀態
+1. 首次載入編輯器即帶入範例教學，右欄同時顯示轉換後卡片（標題有 ▍ 前綴、英文粗體為 Unicode、checkbox 為 ⬜/✅）
+2. 清空編輯器 → 顯示引導文案與「載入範例」按鈕，點擊可載回範例
+3. 左欄輸入時右欄即時更新
 
 - [ ] **Step 8: Commit**
 
@@ -1543,7 +1543,7 @@ const DRAFT_KEY = 'postio:draft'
 const THEME_KEY = 'postio:theme'
 
 export default function App() {
-  const [markdown, setMarkdown] = useState(() => localStorage.getItem(DRAFT_KEY) ?? '')
+  const [markdown, setMarkdown] = useState(() => localStorage.getItem(DRAFT_KEY) ?? SAMPLE_MARKDOWN)
   const [themeId, setThemeId] = useState(() => localStorage.getItem(THEME_KEY) ?? THEMES[0].id)
 
   const posts = useMemo(() => convert(markdown, themeId), [markdown, themeId])
@@ -1595,7 +1595,7 @@ Run: `npm run dev`
 Expected:
 1. 右上主題切換（▍ 直線／◆ 菱形），點擊後標題前綴即時改變
 2. 輸入文字後重新整理頁面 → 草稿仍在；切換主題後重新整理 → 主題仍在
-3. 清空 localStorage（DevTools → Application）→ 回到預設直線主題、空草稿
+3. 清空 localStorage（DevTools → Application）→ 回到預設直線主題、編輯器重新載入範例教學
 
 - [ ] **Step 4: Commit**
 
@@ -1628,7 +1628,7 @@ Expected: 53 passed；build 成功無 TypeScript 錯誤。
 2. 每篇卡片字數 ≤ 500，複製後貼到 Threads（或任意文字欄位）格式正確
 3. 超過 500 字的文章正確分段、編號正確、標題不落單
 4. 重新整理頁面，草稿與主題選擇仍在
-5. 首次使用者透過「載入範例」能在 30 秒內完成一次完整流程
+5. 清空 localStorage 後重新載入，頁面即顯示範例教學與轉換結果，30 秒內可完成一次完整流程
 
 同時實測規格 3.3 的待驗證假設：把含巢狀清單的輸出貼進 Threads 草稿，確認行首空格是否保留；若被剝除，把 `render.ts` 的 `INDENT` 改為 `'  '`（EN SPACE）並更新對應測試與規格。
 
