@@ -1,4 +1,4 @@
-export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
+# 歡迎使用 Postio 👋
 
 **Postio** 把 Markdown 轉成適合貼上 Threads 的純文字。
 
@@ -18,7 +18,7 @@ export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 
 *這是斜體 Italic*
 
-\`code is monospace\`（等寬字，中文不適用）
+`code is monospace`（等寬字，中文不適用）
 
 [這是連結](https://example.com)
 
@@ -41,4 +41,3 @@ export const SAMPLE_MARKDOWN = `# 歡迎使用 Postio 👋
 ===
 
 這一篇就是被 === 切出來的，編號也跟著更新了。祝您使用愉快！
-`

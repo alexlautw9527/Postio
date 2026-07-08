@@ -3,7 +3,7 @@ import { convert, THEMES } from './core'
 import { Editor } from './components/Editor'
 import { PostCard } from './components/PostCard'
 import { ThemePicker } from './components/ThemePicker'
-import { SAMPLE_MARKDOWN } from './sample'
+import SAMPLE_MARKDOWN from './sample.md?raw'
 import './App.css'
 
 const DRAFT_KEY = 'postio:draft'
