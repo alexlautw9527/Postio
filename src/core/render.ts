@@ -22,7 +22,7 @@ export function renderBlocks(markdown: string, theme: Theme): Block[] {
   return blocks
 }
 
-function walk(nodes: RootContent[], theme: Theme, blocks: Block[]): void {
+function walk(nodes: RootContent[], _theme: Theme, blocks: Block[]): void {
   for (const node of nodes) {
     switch (node.type) {
       case 'paragraph': {
