@@ -87,6 +87,20 @@ function hardCut(text: string, size: number): string[] {
   return chunks
 }
 
+// 連續的 listItem 視為同一個單位，避免清單被從中間切開
+function toUnits(blocks: Block[]): Block[][] {
+  const units: Block[][] = []
+  for (const block of blocks) {
+    const last = units[units.length - 1]
+    if (block.kind === 'listItem' && last?.[last.length - 1].kind === 'listItem') {
+      last.push(block)
+    } else {
+      units.push([block])
+    }
+  }
+  return units
+}
+
 function pack(blocks: Block[], capacity: number): Draft[] {
   const drafts: Draft[] = []
   let current: Block[] = []
@@ -107,21 +121,33 @@ function pack(blocks: Block[], capacity: number): Draft[] {
     }
   }
 
-  for (const block of blocks) {
-    const candidate = joinParts([...current, block])
+  const tryPush = (unit: Block[]): boolean => {
+    const candidate = joinParts([...current, ...unit])
     if (countGraphemes(candidate) <= capacity) {
-      current.push(block)
-      continue
+      current.push(...unit)
+      return true
     }
-    close(true)
-    // normalize 保證單一區塊 ≤ capacity；但 close 後箱內可能殘留被移下來的標題
-    const retry = joinParts([...current, block])
-    if (countGraphemes(retry) <= capacity) {
-      current.push(block)
-    } else {
+    return false
+  }
+
+  // 逐一裝入單一區塊；normalize 保證單一區塊 ≤ capacity，
+  // 但 close 後箱內可能殘留被移下來的標題，需再退讓一次
+  const pushSingles = (unit: Block[]) => {
+    for (const block of unit) {
+      if (tryPush([block])) continue
+      close(true)
+      if (tryPush([block])) continue
       close(true)
       current = [block]
     }
+  }
+
+  for (const unit of toUnits(blocks)) {
+    if (tryPush(unit)) continue
+    close(true)
+    if (tryPush(unit)) continue
+    // 清單整組連空箱都放不下：退回逐項裝箱，允許在項目邊界切開
+    pushSingles(unit)
   }
   close(false)
   return drafts

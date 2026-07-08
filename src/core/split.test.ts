@@ -81,4 +81,23 @@ describe('splitBlocks', () => {
     expect(posts[0].text.includes('𝗔')).toBe(false)
     expect(posts[0].text.includes('𝗕')).toBe(false)
   })
+
+  it('清單不從中間切開：整組放得進新篇時整組移過去', () => {
+    const posts = splitBlocks([para(a(450)), li('• ' + a(28)), li('• ' + a(28)), li('• ' + a(28))])
+    expect(posts).toHaveLength(2)
+    expect(posts[0].text.includes('•')).toBe(false)
+    expect((posts[1].text.match(/•/g) ?? []).length).toBe(3)
+  })
+
+  it('清單整組超過單篇容量時才允許在項目邊界切開', () => {
+    const items = Array.from({ length: 6 }, () => li('• ' + a(95)))
+    const posts = splitBlocks([...items])
+    expect(posts.length).toBeGreaterThan(1)
+    // 每個項目都完整（沒有項目被從中間切斷）
+    const allItems = posts.flatMap(p =>
+      p.text.split('\n').filter(l => l.startsWith('• ')),
+    )
+    expect(allItems).toHaveLength(6)
+    expect(allItems.every(l => l === '• ' + a(95))).toBe(true)
+  })
 })
