@@ -22,7 +22,7 @@ export function renderBlocks(markdown: string, theme: Theme): Block[] {
   return blocks
 }
 
-function walk(nodes: RootContent[], _theme: Theme, blocks: Block[]): void {
+function walk(nodes: RootContent[], theme: Theme, blocks: Block[]): void {
   for (const node of nodes) {
     switch (node.type) {
       case 'paragraph': {
@@ -30,8 +30,34 @@ function walk(nodes: RootContent[], _theme: Theme, blocks: Block[]): void {
         if (text.trim() !== '') blocks.push({ kind: 'paragraph', text })
         break
       }
+      case 'heading': {
+        const level = Math.min(node.depth, 3) - 1
+        const prefix = theme.headingPrefix[level]
+        blocks.push({
+          kind: 'heading',
+          text: `${prefix} ${renderInline(node.children, true, false)}`,
+        })
+        break
+      }
+      case 'thematicBreak':
+        blocks.push({ kind: 'divider', text: theme.divider })
+        break
+      case 'blockquote': {
+        const inner: Block[] = []
+        walk(node.children, theme, inner)
+        if (inner.length > 0) {
+          const content = inner.map(b => b.text).join('\n')
+          blocks.push({ kind: 'blockquote', text: `❝ ${content} ❞` })
+        }
+        break
+      }
+      case 'code':
+        if (node.value.trim() !== '') {
+          blocks.push({ kind: 'paragraph', text: node.value })
+        }
+        break
       default:
-        break // 其他區塊型別於 Task 5、6 加入
+        break // 其他區塊型別於 Task 6 加入
     }
   }
 }

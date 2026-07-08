@@ -50,3 +50,47 @@ describe('行內樣式', () => {
     expect(texts('第一段\n\n第二段')).toEqual(['第一段', '第二段'])
   })
 })
+
+describe('區塊元素', () => {
+  it('H1 用主題前綴 + 粗體', () => {
+    expect(texts('# Hello 世界')).toEqual(['▍ 𝗛𝗲𝗹𝗹𝗼 世界'])
+  })
+
+  it('H2 / H3 前綴', () => {
+    expect(texts('## Sub')).toEqual(['▎ 𝗦𝘂𝗯'])
+    expect(texts('### Deep')).toEqual(['▏ 𝗗𝗲𝗲𝗽'])
+  })
+
+  it('H4–H6 視同 H3', () => {
+    expect(texts('##### Tiny')).toEqual(['▏ 𝗧𝗶𝗻𝘆'])
+  })
+
+  it('標題內已有粗體 → 維持粗體（巢狀斜體變粗斜體）', () => {
+    expect(texts('# A *b*')).toEqual(['▍ 𝗔 𝙗'])
+  })
+
+  it('分隔線用主題樣式', () => {
+    expect(texts('---')).toEqual(['───────'])
+  })
+
+  it('單行引用以 ❝ ❞ 包裹', () => {
+    expect(texts('> 一句話')).toEqual(['❝ 一句話 ❞'])
+  })
+
+  it('多行引用整段包裹、內部換行保留', () => {
+    expect(texts('> 第一行，\n> 第二行。')).toEqual(['❝ 第一行，\n第二行。 ❞'])
+  })
+
+  it('多段落引用以換行相接', () => {
+    expect(texts('> 甲\n>\n> 乙')).toEqual(['❝ 甲\n乙 ❞'])
+  })
+
+  it('fenced code block 降級為原樣文字', () => {
+    expect(texts('```\nconst x = 1\n```')).toEqual(['const x = 1'])
+  })
+
+  it('block kind 標記正確', () => {
+    const kinds = renderBlocks('# t\n\np\n\n---', theme).map(b => b.kind)
+    expect(kinds).toEqual(['heading', 'paragraph', 'divider'])
+  })
+})
