@@ -93,11 +93,14 @@ function pack(blocks: Block[], capacity: number): Draft[] {
 
   const close = (moreComing: boolean) => {
     if (current.length === 0) return
-    // 標題不落單：後面還有內容且箱內不只標題時，把箱尾標題移到下一箱
+    // 標題不落單：後面還有內容且箱內不只標題時，把箱尾所有連續標題移到下一箱
     if (moreComing && current.length > 1 && current[current.length - 1].kind === 'heading') {
-      const headingBlock = current.pop()!
+      const headingBlocks: Block[] = []
+      while (current.length > 1 && current[current.length - 1].kind === 'heading') {
+        headingBlocks.unshift(current.pop()!)
+      }
       drafts.push({ parts: current })
-      current = [headingBlock]
+      current = headingBlocks
     } else {
       drafts.push({ parts: current })
       current = []

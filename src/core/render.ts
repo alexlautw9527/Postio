@@ -1,7 +1,7 @@
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
-import type { List, PhrasingContent, Root, RootContent } from 'mdast'
+import type { List, PhrasingContent, Root, RootContent, TableRow } from 'mdast'
 import { applyStyle } from './unicode'
 import type { Theme } from './themes'
 
@@ -59,9 +59,19 @@ function walk(nodes: RootContent[], theme: Theme, blocks: Block[]): void {
       case 'list':
         renderList(node, 0, theme, blocks)
         break
+      case 'table':
+        renderTable(node.children, blocks)
+        break
       default:
         break
     }
+  }
+}
+
+function renderTable(rows: TableRow[], blocks: Block[]): void {
+  for (const row of rows) {
+    const text = row.children.map(cell => renderInline(cell.children, false, false)).join(' · ')
+    if (text.trim() !== '') blocks.push({ kind: 'paragraph', text })
   }
 }
 

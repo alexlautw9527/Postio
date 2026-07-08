@@ -93,6 +93,10 @@ describe('區塊元素', () => {
     const kinds = renderBlocks('# t\n\np\n\n---', theme).map(b => b.kind)
     expect(kinds).toEqual(['heading', 'paragraph', 'divider'])
   })
+
+  it('表格降級為逐列文字', () => {
+    expect(texts('| A | B |\n| --- | --- |\n| 甲 | 乙 |')).toEqual(['A · B', '甲 · 乙'])
+  })
 })
 
 describe('清單', () => {

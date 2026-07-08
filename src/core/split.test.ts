@@ -75,4 +75,10 @@ describe('splitBlocks', () => {
     const posts = splitBlocks([para('p'), heading('▍ 𝗧')])
     expect(posts).toHaveLength(1)
   })
+
+  it('連續兩個標題都不落單', () => {
+    const posts = splitBlocks([para(a(470)), heading('▍ 𝗔'), heading('▎ 𝗕'), para(a(400))])
+    expect(posts[0].text.includes('𝗔')).toBe(false)
+    expect(posts[0].text.includes('𝗕')).toBe(false)
+  })
 })

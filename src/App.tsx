@@ -9,20 +9,36 @@ import './App.css'
 const DRAFT_KEY = 'postio:draft'
 const THEME_KEY = 'postio:theme'
 
+function safeGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+function safeSet(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    // 私隱模式或封鎖儲存時靜默略過，僅失去持久化
+  }
+}
+
 export default function App() {
-  const [markdown, setMarkdown] = useState(() => localStorage.getItem(DRAFT_KEY) ?? SAMPLE_MARKDOWN)
-  const [themeId, setThemeId] = useState(() => localStorage.getItem(THEME_KEY) ?? THEMES[0].id)
+  const [markdown, setMarkdown] = useState(() => safeGet(DRAFT_KEY) ?? SAMPLE_MARKDOWN)
+  const [themeId, setThemeId] = useState(() => safeGet(THEME_KEY) ?? THEMES[0].id)
 
   const posts = useMemo(() => convert(markdown, themeId), [markdown, themeId])
 
   const updateMarkdown = (value: string) => {
     setMarkdown(value)
-    localStorage.setItem(DRAFT_KEY, value)
+    safeSet(DRAFT_KEY, value)
   }
 
   const updateTheme = (id: string) => {
     setThemeId(id)
-    localStorage.setItem(THEME_KEY, id)
+    safeSet(THEME_KEY, id)
   }
 
   return (
